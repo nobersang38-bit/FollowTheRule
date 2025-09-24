@@ -19,25 +19,31 @@ public:
 	void DebugMapViewer();
 private:
 public:
-	//작은 맵을 합쳐주는 함수(통로 연결)
-	void GenerateMap();
+	//네모가 여러개 겹쳐있는듯한 표준 맵
+	std::vector<std::vector<Objects>> GenerateMiddleMap();
 
 	/// <summary>
 	/// 두개의 맵을 합쳐주는 함수
 	/// </summary>
 	/// <param name="InMap1"></param>
 	/// <param name="InMap2"></param>
-	/// <param name="InMapFilterType">BackDepth는 선택한 오브젝트가 뒤에 물체에 가리는 것 처럼 보이게 해줌</param>
+	/// <param name="InMapFilterType">BackDepth는 선택한 오브젝트가 앞의 물체에 가리는 것 처럼 보이게 해줌</param>
 	/// <param name="InFilterObject">적용되는 오브젝트</param>
-	void MapDepthFilter(std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects InFilterObject);
+	std::vector<std::vector<Objects>> MapDepthFilter(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects InFilterObject);
 
 	//전체 맵안에 있는 작은 맵을 생성하는 함수
 	std::vector<std::vector<Objects>> GenerateSmallMap(const Vector InGenerateStartLocation = Vector(0, 0));
 
+	std::vector<std::vector<Objects>> MapLocationSet(std::vector<std::vector<Objects>>& InMap, const Vector InSetLocation);
+
+	bool Direction4Object(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects CheckObject);
+
 	std::vector<std::vector<Objects>> Map;
 
-	Vector SmallMapsMinsize = Vector(25, 25);
-	Vector SmallMapsMaxsize = Vector(50, 50);
+	Vector SmallMapsMinsize = Vector(10, 10);
+	Vector SmallMapsMaxsize = Vector(25, 25);
+	Vector SmallMapsMinLocation = Vector(10, 10);
+	Vector SmallMapsMaxLocation = Vector(50, 50);
 
 	int TotalSmallMaps = 10;
 	int Seed = 0;

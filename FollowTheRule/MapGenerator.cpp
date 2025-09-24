@@ -5,14 +5,14 @@ using namespace Tools;
 
 MapGenerator::MapGenerator()
 {
-	GenerateMap();
+	Map = GenerateMiddleMap();
 	DebugMapViewer();
 }
 
 MapGenerator::MapGenerator(Vector InMapsMinSize, Vector InMapsMaxSize, int InTotalSmallMaps, int InSeed) 
 	: SmallMapsMinsize(InMapsMinSize), SmallMapsMaxsize(InMapsMaxSize), TotalSmallMaps(InTotalSmallMaps), Seed(InSeed)
 {
-	GenerateMap();
+	GenerateMiddleMap();
 	DebugMapViewer();
 }
 
@@ -39,18 +39,42 @@ void MapGenerator::DebugMapViewer()
 	}
 }
 
-void MapGenerator::GenerateMap()
+std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 {
-	Map.push_back(std::vector<Objects>());
+	std::vector<std::vector<Objects>> Temp;
+	Temp.push_back(std::vector<Objects>());
+	Temp[0].push_back(Objects::Empty);
 	//Map[0].push_back(Objects::)
 	for (int i = 0; i < TotalSmallMaps; i++)
 	{
-		MapDepthFilter(Map, GenerateSmallMap(Vector(RandomRange(10, 50), RandomRange(10, 50))), Objects::Empty);
+		std::vector<std::vector<Objects>> Temp2 = GenerateSmallMap(Vector(RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.X), RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.Y)));
+
+		for (int y = 0; y < Temp2.size(); y++)
+		{
+			for (int x = 0; x < Temp2[0].size(); x++)
+			{
+				int YTemp = Clamp(y, 0, Temp.size() - 1);
+				int XTemp = Clamp(x, 0, Temp[0].size() - 1);
+
+				if (Temp2[y][x] == Objects::Wall && Temp2[y][x] == Temp[YTemp][XTemp])
+				{
+					printf("겹침");
+					if (Direction4Object(Temp, Temp2, Objects::Wall))
+					{
+						i--;
+						continue;
+					}
+				}
+			}
+		}
+
+		Temp = MapDepthFilter(Temp, GenerateSmallMap(Vector(RandomRange(10, 100), RandomRange(10, 100))), Objects::Empty);
 		//GenerateSmallMap(Vector(RandomRange(10, 50), RandomRange(10, 50)));
 	}
+	return Temp;
 }
 
-void MapGenerator::MapDepthFilter(std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects InFilterObject)
+std::vector<std::vector<Objects>> MapGenerator::MapDepthFilter(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects InFilterObject)
 {
 	std::vector<std::vector<Objects>> TempMap;
 	int XMax = InMap1[0].size() > InMap2[0].size() ? InMap1[0].size() : InMap2[0].size();
@@ -86,6 +110,7 @@ void MapGenerator::MapDepthFilter(std::vector<std::vector<Objects>>& InMap1, con
 			}
 		}
 	}
+	return TempMap;
 }
 
 std::vector<std::vector<Objects>> MapGenerator::GenerateSmallMap(const Vector InGenerateStartLocation)
@@ -130,5 +155,70 @@ std::vector<std::vector<Objects>> MapGenerator::GenerateSmallMap(const Vector In
 		}
 	}
 	return Map;
+}
+
+std::vector<std::vector<Objects>> MapGenerator::MapLocationSet(std::vector<std::vector<Objects>>& InMap, const Vector InSetLocation)
+{
+	std::vector<std::vector<Objects>> Temp;
+
+	int YMax = InMap.size() + InSetLocation.Y;
+	int XMax = InMap[0].size() + InSetLocation.X;
+
+	for (int y = 0; y < YMax; y++)
+	{
+		Temp.push_back(std::vector<Objects>());
+		for (int x = 0; x < XMax; x++)
+		{
+			Temp[y].push_back(Objects::Empty);
+		}
+	}
+
+	int YCount = Temp.size() - 1;
+	int XCount = Temp[0].size() - 1;
+	for (int y = InMap.size() - 1; y >= 0; y--)
+	{
+		for (int x = InMap[0].size() - 1; x >= 0; x--)
+		{
+			Temp[YCount][XCount] = InMap[y][x];
+			XCount--;
+		}
+		XCount = Temp[0].size() - 1;
+		YCount--;
+	}
+	InMap = Temp;
+
+	return InMap;
+}
+
+bool MapGenerator::Direction4Object(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects CheckObject)
+{
+	int XMax = InMap1[0].size() > InMap2[0].size() ? InMap1[0].size() : InMap2[0].size();
+	int YMax = InMap1.size() > InMap2.size() ? InMap1.size() : InMap2.size();
+	for (int y = 0; y < YMax; y++)
+	{
+		for (int x = 0; x < XMax; x++)
+		{
+			if (InMap2[y][x] == CheckObject && InMap1[y][x] != CheckObject)//지금 체크할 오브젝트 구간에 왔다면
+			{
+				if (YMax > (y + 1) && InMap1[y + 1][x] == CheckObject)
+				{
+					return true;
+				}
+				if (0 <= (y - 1) && InMap1[y - 1][x] == CheckObject)
+				{
+					return true;
+				}
+				if (XMax > (x + 1) && InMap1[y][x + 1] == CheckObject)
+				{
+					return true;
+				}
+				if (0 <= (x - 1) && InMap1[y][x - 1] == CheckObject)
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
