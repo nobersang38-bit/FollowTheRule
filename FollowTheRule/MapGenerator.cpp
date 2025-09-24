@@ -39,6 +39,10 @@ void MapGenerator::DebugMapViewer()
 	}
 }
 
+void MapGenerator::DebugIslandViewr()
+{
+}
+
 std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 {
 	std::vector<std::vector<Objects>> Temp;
@@ -47,36 +51,11 @@ std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 	//Map[0].push_back(Objects::)
 	for (int i = 0; i < TotalSmallMaps; i++)
 	{
-		//std::vector<std::vector<Objects>> Temp2 = GenerateSmallMap(Vector(RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.X), RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.Y)));
-		//bool Retry = false;
-
-		////for (int y = 0; y < Temp2.size(); y++)
-		////{
-		////	for (int x = 0; x < Temp2[0].size(); x++)
-		////	{
-		////		int YTemp = Clamp(y, 0, Temp.size() - 1);
-		////		int XTemp = Clamp(x, 0, Temp[0].size() - 1);
-
-		////		if (Temp2[y][x] == Objects::Wall)
-		////		{
-		////			if (Direction4Object(Temp, Temp2, Objects::Wall))
-		////			{
-		////				Retry = true;
-		////				break;
-		////			}
-		////		}
-		////	}
-		////	if (Retry) break;
-		////}
-		////if (Retry)
-		////{
-		////	i--;
-		////	continue;
-		////}
-		Temp = MapDepthFilter(Temp, GenerateSmallMap(Vector(RandomRange(10, 100), RandomRange(10, 100))), Objects::Empty);
+		Temp = MapDepthFilter(Temp, GenerateSmallMap(Vector(RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.X), RandomRange(SmallMapsMinLocation.Y, SmallMapsMaxLocation.Y))), Objects::Empty);
 		InSideWallsRemover(Temp);
 		SoloWallsRemover(Temp);
 		FillAroundWall(Temp);
+		IslandRoadConnector(Temp);
 		//GenerateSmallMap(Vector(RandomRange(10, 50), RandomRange(10, 50)));
 	}
 	return Temp;
@@ -325,10 +304,100 @@ void MapGenerator::FillAroundWall(std::vector<std::vector<Objects>>& InMap)
 				if (WallDirection != Vector::Zero() || x == (InMap[0].size()-1))
 				{
 					InMap[y][x] = Objects::Wall;
+					continue;
 				}
 			}
+
+			//if (InMap[y][x] == Objects::Wall)//인덱스가 가는 방향의 앞 부분은 스페이스 옆부분은 Empty여야 한다
+			//{
+			//	int YUp = y + 1;
+			//	int YDown = y - 1;
+			//	int XLeft = x - 1;
+			//	int XRight = x + 1;
+			//	if (YUp < InMap.size() && InMap[YUp][x] == Objects::Space)
+			//	{
+			//		Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Empty);
+			//		if (WallDirection == Vector::Right() || WallDirection == Vector::Left())
+			//		{
+			//			InMap[YUp][x] = Objects::Wall;
+			//			continue;
+			//		}
+			//	}
+			//	else if (YDown >= 0 && InMap[YDown][x] == Objects::Space)
+			//	{
+			//		Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Empty);
+			//		if (WallDirection == Vector::Right() || WallDirection == Vector::Left())
+			//		{
+			//			InMap[YDown][x] = Objects::Wall;
+			//			continue;
+			//		}
+			//	}
+			//	else if (XLeft >= 0 && InMap[y][XLeft] == Objects::Space)
+			//	{
+			//		Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Empty);
+			//		if (WallDirection == Vector::Up() || WallDirection == Vector::Down())
+			//		{
+			//			InMap[y][XLeft] = Objects::Wall;
+			//			continue;
+			//		}
+			//	}
+			//	else if (XRight < InMap[0].size() && InMap[y][XRight] == Objects::Space)
+			//	{
+			//		Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Empty);
+			//		if (WallDirection == Vector::Up() || WallDirection == Vector::Down())
+			//		{
+			//			InMap[y][XRight] = Objects::Wall;
+			//			continue;
+			//		}
+			//	}
+
+			//	//이거 위로 옮기면 맵 신기해져요
+			//	if (YUp < InMap.size() && InMap[YUp][x] == Objects::Empty)
+			//	{
+			//		Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Space);
+			//		if (WallDirection == Vector::Right() || WallDirection == Vector::Left())
+			//		{
+			//			InMap[YUp][x] = Objects::Wall;
+			//			continue;
+			//		}
+			//	}
+			//	else if (YDown >= 0 && InMap[YDown][x] == Objects::Empty)
+			//	{
+			//		Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Space);
+			//		if (WallDirection == Vector::Right() || WallDirection == Vector::Left())
+			//		{
+			//			InMap[YDown][x] = Objects::Wall;
+			//			continue;
+			//		}
+			//	}
+			//	else if (XLeft >= 0 && InMap[y][XLeft] == Objects::Empty)
+			//	{
+			//		Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Space);
+			//		if (WallDirection == Vector::Up() || WallDirection == Vector::Down())
+			//		{
+			//			InMap[y][XLeft] = Objects::Wall;
+			//			continue;
+			//		}
+			//	}
+			//	else if (XRight < InMap[0].size() && InMap[y][XRight] == Objects::Empty)
+			//	{
+			//		Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Space);
+			//		if (WallDirection == Vector::Up() || WallDirection == Vector::Down())
+			//		{
+			//			InMap[y][XRight] = Objects::Wall;
+			//			continue;
+			//		}
+			//	}
+			//}
 		}
 	}
+}
+
+
+void MapGenerator::IslandRoadConnector(std::vector<std::vector<Objects>>& InMap)//섬을 찾으면 일단 섬안을 돌아서 섬 내부를 다 갈 수 있는지 확인 합시다
+{
+	std::vector<std::vector<Objects>> Temp = std::vector<std::vector<Objects>>(InMap);
+
 }
 
 Vector MapGenerator::IsArounObject(const std::vector<std::vector<Objects>>& InMap, Vector InFindLocation, Objects InFindObject)

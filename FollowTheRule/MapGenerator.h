@@ -17,6 +17,7 @@ public:
 	MapGenerator(Vector InMapsMinSize, Vector InMapsMaxSize, int InTotalSmallMaps, int InSeed);
 
 	void DebugMapViewer();
+	void DebugIslandViewr();
 private:
 public:
 	//네모가 여러개 겹쳐있는듯한 표준 맵
@@ -42,18 +43,25 @@ public:
 	void SoloWallsRemover(std::vector<std::vector<Objects>>& InMap);
 	//바깥쪽에 벽이 없다면 채워 넣는 함수
 	void FillAroundWall(std::vector<std::vector<Objects>>& InMap);
+	//갈 수 있는 길이 없으면 만들어 주고 Island변수도 추가 합니다
+	void IslandRoadConnector(std::vector<std::vector<Objects>>& InMap);
 	Vector IsArounObject(const std::vector<std::vector<Objects>>& InMap, Vector InFindLocation, Objects InFindObject);
 
 	std::vector<std::vector<Objects>> Map;
 
-	Vector SmallMapsMinsize = Vector(10, 10);
-	Vector SmallMapsMaxsize = Vector(20, 20);
-	Vector SmallMapsMinLocation = Vector(10, 10);
-	Vector SmallMapsMaxLocation = Vector(30, 30);
+	//하나의 섬안에 위치를 저장해둡니다
+	std::vector<std::vector<Vector>> Island;
 
-	int TotalSmallMaps = 50;
+	Vector SmallMapsMinsize = Vector(5, 5);
+	Vector SmallMapsMaxsize = Vector(15, 15);
+	Vector SmallMapsMinLocation = Vector(10, 10);
+	Vector SmallMapsMaxLocation = Vector(100, 100);
+
+	int TotalSmallMaps = 60;
 	int Seed = 0;
 
 	//이거는 아직 넣지 맙시다 사각형 완성되고 ㄱ
 	float Noise = 0.0f;
+
+	int TestCount = 0;
 };

@@ -13,11 +13,11 @@ public:
 	/// <returns></returns>
 	int Magnitude();
 
-	static inline const Vector Up() { return Vector(0, 1); }
-	static inline const Vector Down() { return Vector(0, -1); }
-	static inline const Vector Left() { return Vector(-1, 0); }
-	static inline const Vector Right() { return Vector(1, 0); }
-	static inline const Vector Zero() { return Vector(0, 0); }
+	static inline Vector Up() { return Vector(0, 1); }
+	static inline Vector Down() { return Vector(0, -1); }
+	static inline Vector Left() { return Vector(-1, 0); }
+	static inline Vector Right() { return Vector(1, 0); }
+	static inline Vector Zero() { return Vector(0, 0); }
 
 	Vector operator*(int Other);//이거는 더 멀리가고 싶을때 사용합시다
 
