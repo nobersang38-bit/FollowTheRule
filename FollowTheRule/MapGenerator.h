@@ -1,7 +1,15 @@
 #pragma once
 #include <vector>
+#include "ObjectsEnumClass.h"
 #include "Vector.h"
+
+enum class MapFilterType
+{
+	BackDepth = 0
+};
+
 //이벤트 오브젝트와 플레이어를 제외한 맵을 생성하는 클래스
+//생성되는 즉시 맵도 생성합니다
 class MapGenerator
 {
 public:
@@ -10,12 +18,30 @@ public:
 
 	void DebugMapViewer();
 private:
-	void GeneratedMap();
-	std::vector<std::vector<int>> Map;
+public:
+	//작은 맵을 합쳐주는 함수(통로 연결)
+	void GenerateMap();
 
-	Vector MapsMinsize = Vector(25, 25);
-	Vector MapsMaxsize = Vector(50, 50);
+	/// <summary>
+	/// 두개의 맵을 합쳐주는 함수
+	/// </summary>
+	/// <param name="InMap1"></param>
+	/// <param name="InMap2"></param>
+	/// <param name="InMapFilterType">BackDepth는 선택한 오브젝트가 뒤에 물체에 가리는 것 처럼 보이게 해줌</param>
+	/// <param name="InFilterObject">적용되는 오브젝트</param>
+	void MapDepthFilter(std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects InFilterObject);
+
+	//전체 맵안에 있는 작은 맵을 생성하는 함수
+	std::vector<std::vector<Objects>> GenerateSmallMap(const Vector InGenerateStartLocation = Vector(0, 0));
+
+	std::vector<std::vector<Objects>> Map;
+
+	Vector SmallMapsMinsize = Vector(25, 25);
+	Vector SmallMapsMaxsize = Vector(50, 50);
+
 	int TotalSmallMaps = 10;
 	int Seed = 0;
-};
 
+	//이거는 아직 넣지 맙시다 사각형 완성되고 ㄱ
+	float Noise = 0.0f;
+};

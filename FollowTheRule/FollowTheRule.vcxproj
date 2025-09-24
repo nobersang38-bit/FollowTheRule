@@ -125,10 +125,13 @@
   <ItemGroup>
     <ClCompile Include="FollowTheRule.cpp" />
     <ClCompile Include="MapGenerator.cpp" />
+    <ClCompile Include="Tools.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MapGenerator.h" />
+    <ClInclude Include="ObjectsEnumClass.h" />
+    <ClInclude Include="Tools.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

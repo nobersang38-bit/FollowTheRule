@@ -2,10 +2,35 @@
 //
 
 #include <iostream>
+#include "MapGenerator.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	srand(time(0));
+	MapGenerator mapGenerator;
+	//std::vector<std::vector<Objects>> Map = mapGenerator.GenerateSmallMap(Vector(10,15));
+
+	//for (int i = 0; i < Map.size(); i++)
+	//{
+	//	for (int j = 0; j < Map[i].size(); j++)
+	//	{
+	//		switch (Map[i][j])
+	//		{
+	//			case Objects::Space:
+	//				printf(". ");
+	//				break;
+	//			case Objects::Wall:
+	//				printf("# ");
+	//				break;
+	//			case Objects::Empty:
+	//				printf("  ");
+	//				break;
+	//		}
+	//	}
+	//	printf("\n");
+	//}
+
+	//printf("%d  %d", Map.size(), Map[0].size());
 }
 
 // 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴

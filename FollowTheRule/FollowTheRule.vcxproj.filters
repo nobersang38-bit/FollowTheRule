@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="도구">
+      <UniqueIdentifier>{e7fa1601-9855-48d8-9f78-a36c06a008d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FollowTheRule.cpp">
@@ -22,7 +25,10 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Vector.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>도구</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>도구</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -30,7 +36,13 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Vector.h">
+      <Filter>도구</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectsEnumClass.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.h">
+      <Filter>도구</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
