@@ -47,33 +47,34 @@ std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 	//Map[0].push_back(Objects::)
 	for (int i = 0; i < TotalSmallMaps; i++)
 	{
-		std::vector<std::vector<Objects>> Temp2 = GenerateSmallMap(Vector(RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.X), RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.Y)));
-		bool Retry = false;
+		//std::vector<std::vector<Objects>> Temp2 = GenerateSmallMap(Vector(RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.X), RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.Y)));
+		//bool Retry = false;
 
-		for (int y = 0; y < Temp2.size(); y++)
-		{
-			for (int x = 0; x < Temp2[0].size(); x++)
-			{
-				int YTemp = Clamp(y, 0, Temp.size() - 1);
-				int XTemp = Clamp(x, 0, Temp[0].size() - 1);
+		////for (int y = 0; y < Temp2.size(); y++)
+		////{
+		////	for (int x = 0; x < Temp2[0].size(); x++)
+		////	{
+		////		int YTemp = Clamp(y, 0, Temp.size() - 1);
+		////		int XTemp = Clamp(x, 0, Temp[0].size() - 1);
 
-				if (Temp2[y][x] == Objects::Wall)
-				{
-					if (Direction4Object(Temp, Temp2, Objects::Wall))
-					{
-						Retry = true;
-						break;
-					}
-				}
-			}
-			if (Retry) break;
-		}
-		if (Retry)
-		{
-			i--;
-			continue;
-		}
+		////		if (Temp2[y][x] == Objects::Wall)
+		////		{
+		////			if (Direction4Object(Temp, Temp2, Objects::Wall))
+		////			{
+		////				Retry = true;
+		////				break;
+		////			}
+		////		}
+		////	}
+		////	if (Retry) break;
+		////}
+		////if (Retry)
+		////{
+		////	i--;
+		////	continue;
+		////}
 		Temp = MapDepthFilter(Temp, GenerateSmallMap(Vector(RandomRange(10, 100), RandomRange(10, 100))), Objects::Empty);
+		ParallelWallsRemover(Temp);
 		//GenerateSmallMap(Vector(RandomRange(10, 50), RandomRange(10, 50)));
 	}
 	return Temp;
@@ -228,3 +229,66 @@ bool MapGenerator::Direction4Object(const std::vector<std::vector<Objects>>& InM
 	return false;
 }
 
+void MapGenerator::ParallelWallsRemover(std::vector<std::vector<Objects>>& InMap)
+{
+	for (int y = 0; y < InMap.size(); y++)
+	{
+		for (int x = 0; x < InMap[0].size(); x++)
+		{
+			if (InMap[y][x] == Objects::Wall)
+			{
+				int YUp = y + 1;
+				int YDown = y - 1;
+				int XLeft = x - 1;
+				int XRight = x + 1;
+
+				if (
+					(InMap.size() <= YUp || InMap[YUp][x] == Objects::Empty) ||
+					(0 > YDown || InMap[YDown][x] == Objects::Empty) ||
+					(0 > XLeft || InMap[y][XLeft] == Objects::Empty) ||
+					(InMap[0].size() <= XRight || InMap[y][XRight] == Objects::Empty)
+					) continue;
+
+				int XCount = 0;
+				int YCount = 0;
+				if (InMap.size() > YUp && InMap[YUp][x] == Objects::Wall)//이건 오른쪽으로 삭제해야합니다
+				{
+					XCount = x;
+					while (XCount < InMap[0].size() && InMap[YUp][XCount] == Objects::Wall)
+					{
+						InMap[y][XCount] = Objects::Space;
+						XCount++;
+					}
+				}
+				if (0 <= YDown && InMap[YDown][x] == Objects::Wall)//이건 오른쪽으로 삭제해야합니다
+				{
+					XCount = x;
+					while (XCount < InMap[0].size() && InMap[YDown][XCount] == Objects::Wall)
+					{
+						InMap[y][XCount] = Objects::Space;
+						XCount++;
+					}
+				}
+
+				if (0 <= XLeft && InMap[y][XLeft] == Objects::Wall)//이건 아래쪽으로 삭제해야합니다
+				{
+					YCount = y;
+					while (0 <= YCount && InMap[YCount][XLeft] == Objects::Wall)
+					{
+						InMap[YCount][x] = Objects::Space;
+						YCount--;
+					}
+				}
+				if (InMap[0].size() > XRight && InMap[y][XRight] == Objects::Wall)//이건 아래쪽으로 삭제해야합니다
+				{
+					YCount = y;
+					while (0 <= YCount && InMap[YCount][XRight] == Objects::Wall)
+					{
+						InMap[YCount][x] = Objects::Space;
+						YCount--;
+					}
+				}
+			}
+		}
+	}
+}

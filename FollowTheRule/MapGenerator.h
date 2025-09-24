@@ -38,14 +38,16 @@ public:
 
 	bool Direction4Object(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects CheckObject);
 
+	void ParallelWallsRemover(std::vector<std::vector<Objects>>& InMap);
+
 	std::vector<std::vector<Objects>> Map;
 
-	Vector SmallMapsMinsize = Vector(10, 10);
-	Vector SmallMapsMaxsize = Vector(40, 40);
-	Vector SmallMapsMinLocation = Vector(15, 15);
-	Vector SmallMapsMaxLocation = Vector(30, 30);
+	Vector SmallMapsMinsize = Vector(15, 15);
+	Vector SmallMapsMaxsize = Vector(30, 30);
+	Vector SmallMapsMinLocation = Vector(10, 10);
+	Vector SmallMapsMaxLocation = Vector(25, 25);
 
-	int TotalSmallMaps = 15;
+	int TotalSmallMaps = 20;
 	int Seed = 0;
 
 	//이거는 아직 넣지 맙시다 사각형 완성되고 ㄱ

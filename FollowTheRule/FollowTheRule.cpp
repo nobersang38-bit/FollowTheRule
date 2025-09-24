@@ -6,7 +6,7 @@
 
 int main()
 {
-	srand(/*time(0)*/109);
+	srand(time(0));
 	MapGenerator mapGenerator;
 	//std::vector<std::vector<Objects>> Map = mapGenerator.GenerateSmallMap(Vector(10,15));
 
