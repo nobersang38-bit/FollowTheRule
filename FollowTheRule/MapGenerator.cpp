@@ -48,6 +48,7 @@ std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 	for (int i = 0; i < TotalSmallMaps; i++)
 	{
 		std::vector<std::vector<Objects>> Temp2 = GenerateSmallMap(Vector(RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.X), RandomRange(SmallMapsMinLocation.X, SmallMapsMaxLocation.Y)));
+		bool Retry = false;
 
 		for (int y = 0; y < Temp2.size(); y++)
 		{
@@ -56,18 +57,22 @@ std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 				int YTemp = Clamp(y, 0, Temp.size() - 1);
 				int XTemp = Clamp(x, 0, Temp[0].size() - 1);
 
-				if (Temp2[y][x] == Objects::Wall && Temp2[y][x] == Temp[YTemp][XTemp])
+				if (Temp2[y][x] == Objects::Wall)
 				{
-					printf("겹침");
 					if (Direction4Object(Temp, Temp2, Objects::Wall))
 					{
-						i--;
-						continue;
+						Retry = true;
+						break;
 					}
 				}
 			}
+			if (Retry) break;
 		}
-
+		if (Retry)
+		{
+			i--;
+			continue;
+		}
 		Temp = MapDepthFilter(Temp, GenerateSmallMap(Vector(RandomRange(10, 100), RandomRange(10, 100))), Objects::Empty);
 		//GenerateSmallMap(Vector(RandomRange(10, 50), RandomRange(10, 50)));
 	}
@@ -192,13 +197,14 @@ std::vector<std::vector<Objects>> MapGenerator::MapLocationSet(std::vector<std::
 
 bool MapGenerator::Direction4Object(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects CheckObject)
 {
-	int XMax = InMap1[0].size() > InMap2[0].size() ? InMap1[0].size() : InMap2[0].size();
-	int YMax = InMap1.size() > InMap2.size() ? InMap1.size() : InMap2.size();
+	int XMax = InMap1[0].size() < InMap2[0].size() ? InMap1[0].size() : InMap2[0].size();
+	int YMax = InMap1.size() < InMap2.size() ? InMap1.size() : InMap2.size();
+
 	for (int y = 0; y < YMax; y++)
 	{
 		for (int x = 0; x < XMax; x++)
 		{
-			if (InMap2[y][x] == CheckObject && InMap1[y][x] != CheckObject)//지금 체크할 오브젝트 구간에 왔다면
+			if (InMap2[y][x] == CheckObject)//지금 체크할 오브젝트 구간에 왔다면
 			{
 				if (YMax > (y + 1) && InMap1[y + 1][x] == CheckObject)
 				{

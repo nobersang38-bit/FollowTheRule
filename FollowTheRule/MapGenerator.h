@@ -41,11 +41,11 @@ public:
 	std::vector<std::vector<Objects>> Map;
 
 	Vector SmallMapsMinsize = Vector(10, 10);
-	Vector SmallMapsMaxsize = Vector(25, 25);
-	Vector SmallMapsMinLocation = Vector(10, 10);
-	Vector SmallMapsMaxLocation = Vector(50, 50);
+	Vector SmallMapsMaxsize = Vector(40, 40);
+	Vector SmallMapsMinLocation = Vector(15, 15);
+	Vector SmallMapsMaxLocation = Vector(30, 30);
 
-	int TotalSmallMaps = 10;
+	int TotalSmallMaps = 15;
 	int Seed = 0;
 
 	//이거는 아직 넣지 맙시다 사각형 완성되고 ㄱ
