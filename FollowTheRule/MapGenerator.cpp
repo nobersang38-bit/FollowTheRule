@@ -74,7 +74,9 @@ std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 		////	continue;
 		////}
 		Temp = MapDepthFilter(Temp, GenerateSmallMap(Vector(RandomRange(10, 100), RandomRange(10, 100))), Objects::Empty);
-		ParallelWallsRemover(Temp);
+		InSideWallsRemover(Temp);
+		SoloWallsRemover(Temp);
+		FillAroundWall(Temp);
 		//GenerateSmallMap(Vector(RandomRange(10, 50), RandomRange(10, 50)));
 	}
 	return Temp;
@@ -229,7 +231,7 @@ bool MapGenerator::Direction4Object(const std::vector<std::vector<Objects>>& InM
 	return false;
 }
 
-void MapGenerator::ParallelWallsRemover(std::vector<std::vector<Objects>>& InMap)
+void MapGenerator::InSideWallsRemover(std::vector<std::vector<Objects>>& InMap)
 {
 	for (int y = 0; y < InMap.size(); y++)
 	{
@@ -291,4 +293,72 @@ void MapGenerator::ParallelWallsRemover(std::vector<std::vector<Objects>>& InMap
 			}
 		}
 	}
+}
+
+void MapGenerator::SoloWallsRemover(std::vector<std::vector<Objects>>& InMap)
+{
+	for (int y = 0; y < InMap.size(); y++)
+	{
+		for (int x = 0; x < InMap[0].size(); x++)
+		{
+			if (InMap[y][x] == Objects::Wall)
+			{
+				Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Wall);
+				if (WallDirection == Vector::Zero())
+				{
+					InMap[y][x] = Objects::Space;
+				}
+			}
+		}
+	}
+}
+
+void MapGenerator::FillAroundWall(std::vector<std::vector<Objects>>& InMap)
+{
+	for (int y = 0; y < InMap.size(); y++)
+	{
+		for (int x = 0; x < InMap[0].size(); x++)
+		{
+			if (InMap[y][x] == Objects::Space)
+			{
+				Vector WallDirection = IsArounObject(InMap, Vector(x, y), Objects::Empty);
+				if (WallDirection != Vector::Zero() || x == (InMap[0].size()-1))
+				{
+					InMap[y][x] = Objects::Wall;
+				}
+			}
+		}
+	}
+}
+
+Vector MapGenerator::IsArounObject(const std::vector<std::vector<Objects>>& InMap, Vector InFindLocation, Objects InFindObject)
+{
+	int YMax = InMap.size();
+	int XMax = InMap[0].size();
+	if (
+			YMax <= InFindLocation.Y || 0 > InFindLocation.Y ||
+			XMax <= InFindLocation.X || 0 > InFindLocation.X
+		)
+	{
+		return Vector::Zero();
+	}
+
+	if (YMax > (InFindLocation.Y + 1) && InMap[InFindLocation.Y + 1][InFindLocation.X] == InFindObject)
+	{
+		return Vector::Up();
+	}
+	if (0 <= (InFindLocation.Y - 1) && InMap[InFindLocation.Y - 1][InFindLocation.X] == InFindObject)
+	{
+		return Vector::Down();
+	}
+	if (0 <= (InFindLocation.X - 1) && InMap[InFindLocation.Y][InFindLocation.X - 1] == InFindObject)
+	{
+		return Vector::Left();
+	}
+	if (XMax > (InFindLocation.X + 1) && InMap[InFindLocation.Y][InFindLocation.X + 1] == InFindObject)
+	{
+		return Vector::Right();
+	}
+
+	return Vector::Zero();
 }

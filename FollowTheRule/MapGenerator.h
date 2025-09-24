@@ -38,16 +38,20 @@ public:
 
 	bool Direction4Object(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects CheckObject);
 
-	void ParallelWallsRemover(std::vector<std::vector<Objects>>& InMap);
+	void InSideWallsRemover(std::vector<std::vector<Objects>>& InMap);
+	void SoloWallsRemover(std::vector<std::vector<Objects>>& InMap);
+	//바깥쪽에 벽이 없다면 채워 넣는 함수
+	void FillAroundWall(std::vector<std::vector<Objects>>& InMap);
+	Vector IsArounObject(const std::vector<std::vector<Objects>>& InMap, Vector InFindLocation, Objects InFindObject);
 
 	std::vector<std::vector<Objects>> Map;
 
-	Vector SmallMapsMinsize = Vector(15, 15);
-	Vector SmallMapsMaxsize = Vector(30, 30);
+	Vector SmallMapsMinsize = Vector(10, 10);
+	Vector SmallMapsMaxsize = Vector(20, 20);
 	Vector SmallMapsMinLocation = Vector(10, 10);
-	Vector SmallMapsMaxLocation = Vector(25, 25);
+	Vector SmallMapsMaxLocation = Vector(30, 30);
 
-	int TotalSmallMaps = 20;
+	int TotalSmallMaps = 50;
 	int Seed = 0;
 
 	//이거는 아직 넣지 맙시다 사각형 완성되고 ㄱ
