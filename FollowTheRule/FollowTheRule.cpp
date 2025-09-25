@@ -5,13 +5,30 @@
 #include "MapGenerator.h"
 #include "RythmGame.h"
 #include "ItemsManager.h"
+#include "GameManager.h"
+#include "Tools.h"
 
+/*
+gpt도움
+
+DeltaTime구하기
+friend 사용법
+키 즉시 입력 받기
+화면에 출력할때 string에 모아놨다가 한번에 출력하면 덜 깜빡인다고 한다
+*/
 int main()
 {
-	ItemsManager asd;
-	asd.DebugItemsPrint();
-	/*srand(time(0));
-	MapGenerator mapGenerator;*/
+	srand(time(0));
+	Tools Tool;
+	//ItemsManager asd;
+	//asd.DebugItemsPrint();
+	//int64_t Seed = time(0);
+	//srand(Seed);
+	//MapGenerator mapGenerator;
+	//std::cout<<"\n\nSeed["<< Seed <<"]\n\n";
+
+	GameManager GameManaerMain;
+
 
 	//RythmGame Rythm;
 	//Rythm.Play("asd");

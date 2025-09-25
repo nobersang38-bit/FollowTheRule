@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Object.h"
 #include "ObjectsEnumClass.h"
 #include "Vector.h"
 
@@ -10,18 +11,24 @@ enum class MapFilterType
 
 //이벤트 오브젝트와 플레이어를 제외한 맵을 생성하는 클래스
 //생성되는 즉시 맵도 생성합니다
-class MapGenerator
+class MapGenerator : Object
 {
 public:
-	MapGenerator();
-	MapGenerator(Vector InMapsMinSize, Vector InMapsMaxSize, int InTotalSmallMaps, int InSeed);
+	void Update() override;
+	void Start() override;
+
+	const std::vector<std::vector<Objects>>& GetMap() const { return Map; }
 
 	void DebugMapViewer();
 	void DebugIslandViewr();
 	void DebugSmallMapsViewer();
 
+	MapGenerator();
+	MapGenerator(Vector InMapsMinSize, Vector InMapsMaxSize, int InTotalSmallMaps, int InSeed);
+
+
+
 private:
-public:
 	//네모가 여러개 겹쳐있는듯한 표준 맵
 	std::vector<std::vector<Objects>> GenerateMiddleMap();
 
@@ -44,6 +51,8 @@ public:
 
 	void InSideWallsRemover(std::vector<std::vector<Objects>>& InMap);
 	void SoloWallsRemover(std::vector<std::vector<Objects>>& InMap);
+	void AroundAllWallSpaceCheckEdit(std::vector<std::vector<Objects>>& InMap);
+
 	//바깥쪽에 벽이 없다면 채워 넣는 함수
 	void FillAroundWall(std::vector<std::vector<Objects>>& InMap);
 
@@ -53,9 +62,10 @@ public:
 
 	//서로 제일 가까운 곳에 좌표를 알려줍니다//만약 가로나 세로방향으로 못간다면 Vector::Min()을 반환합니다
 	std::vector<Vector> IslandMinVector(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2);
-	//갈 수 있는 길이 없으면 만들어 주고 Island변수도 추가 합니다
 	//void IslandRoadConnector(std::vector<std::vector<Objects>>& InMap, Vector InLocation = Vector::Zero());
 	Vector IsArounObject(const std::vector<std::vector<Objects>>& InMap, Vector InFindLocation, Objects InFindObject);
+	bool IsArounObject(const std::vector<std::vector<Objects>>& InMap, Vector InFindLocation, Vector InCheckDirection, Objects InFindObject);
+
 
 	std::vector<std::vector<Objects>> Map;
 
@@ -70,7 +80,6 @@ public:
 
 	int TotalSmallMaps = 60;
 	int Seed = 0;
-
 	//필요한거
 	//길 배열 (규칙에 그거 넣을겁니다 통로에 관련된거)
 	//

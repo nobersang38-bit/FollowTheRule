@@ -8,7 +8,8 @@ enum class ItemChildren
 	Item = 0,
 	Document,
 	GlassBottle,
-	FadedFinger
+	FadedFinger,
+	Map
 };
 
 class Item
@@ -25,6 +26,9 @@ public:
 	//아이템이 망가졌는지 확인하는 함수 망가졌으면 true
 	inline const bool GetIsItemDestroy() const { return (UseCount <= 0); }
 
+	//아이템 사용시 실제 효과
+	virtual bool UsingEffect();
+
 	Item() = default;
 	Item(int InID, ItemChildren InCategory, std::string InName, std::string InDescription, Vector InLocation, int InUseCount, std::string InDevelDescription)
 		: ID(InID), Category(InCategory), Name(InName), Description(InDescription), Location(InLocation), UseCount(InUseCount), DevelDescription(InDevelDescription) { }
@@ -40,9 +44,6 @@ protected:
 
 	//사용 가능한 횟수
 	int UseCount = 0;
-
-	//아이템 사용시 실제 효과
-	virtual bool UsingEffect();
 };
 
 

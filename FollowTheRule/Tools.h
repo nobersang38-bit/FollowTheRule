@@ -1,15 +1,23 @@
 #pragma once
 #include <limits>
-namespace Tools
+#include <thread>
+
+//꼭 생성 합시다
+class Tools
 {
+public:
 	//InMin<= Return < InMax
-	int RandomRange(int InMin, int InMax, int Seed = -1);
+	static int RandomRange(int InMin, int InMax, int Seed = -1);
 
-	int Clamp(int InValue, int InMin = 0, int InMax = INT_MAX);
+	static int Clamp(int InValue, int InMin = 0, int InMax = INT_MAX);
 
-	int Abs(int InValue);
+	static int Abs(int InValue);
 
-	enum class Direction
+	static bool GetKey(char InKey);
+
+	static float DeletaTime();
+
+	static enum class Direction
 	{
 		None = 0,
 		Up,

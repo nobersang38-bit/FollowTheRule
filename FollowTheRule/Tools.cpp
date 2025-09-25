@@ -1,5 +1,6 @@
-#include "Tools.h"
 #include <random>
+#include "Tools.h"
+#include "GameManager.h"
 
 int Tools::RandomRange(int InMin, int InMax, int Seed)
 {
@@ -34,3 +35,22 @@ int Tools::Abs(int InValue)
 {
 	return InValue < 0 ? -InValue : InValue;
 }
+
+bool Tools::GetKey(char InKey)
+{
+	if (InKey == GameManager::CurrentInputGameManager())//키를 감지하는 부분
+	{
+		return true;
+	}
+	return false;
+}
+
+float Tools::DeletaTime()
+{
+	return GameManager::DeltaTimeGameManager();
+}
+
+//float Tools::DeletaTime()
+//{
+//	return delta.;
+//}
