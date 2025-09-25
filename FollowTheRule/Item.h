@@ -79,3 +79,5 @@ public:
 
 	virtual bool UsingEffect() override;
 };
+
+//아이템 더 많이 넣읍시다
