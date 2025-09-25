@@ -123,14 +123,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FollowTheRule.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ItemsManager.cpp" />
     <ClCompile Include="MapGenerator.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RythmGame.cpp" />
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemsManager.h" />
     <ClInclude Include="MapGenerator.h" />
     <ClInclude Include="ObjectsEnumClass.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="RythmGame.h" />
     <ClInclude Include="Tools.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>

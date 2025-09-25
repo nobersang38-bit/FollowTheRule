@@ -5,15 +5,23 @@ using namespace Tools;
 
 MapGenerator::MapGenerator()
 {
-	Map = GenerateMiddleMap();
-	DebugMapViewer();
+	for (int i = 0; i < 50; i++)
+	{
+		Map = GenerateMiddleMap();
+		DebugMapViewer();
+	}
+	//DebugSmallMapsViewer();
 }
 
 MapGenerator::MapGenerator(Vector InMapsMinSize, Vector InMapsMaxSize, int InTotalSmallMaps, int InSeed) 
 	: SmallMapsMinsize(InMapsMinSize), SmallMapsMaxsize(InMapsMaxSize), TotalSmallMaps(InTotalSmallMaps), Seed(InSeed)
 {
-	GenerateMiddleMap();
-	DebugMapViewer();
+	for (int i = 0; i < 50; i++)
+	{
+		Map = GenerateMiddleMap();
+		DebugMapViewer();
+	}
+	//DebugSmallMapsViewer();
 }
 
 void MapGenerator::DebugMapViewer()
@@ -43,6 +51,34 @@ void MapGenerator::DebugIslandViewr()
 {
 }
 
+void MapGenerator::DebugSmallMapsViewer()
+{
+	printf("SmallMap 몇개인가 : [%d]\n", static_cast<int>(SmallMapTemp.size()));
+	for (int i = 0; i < SmallMapTemp.size(); i++)
+	{
+		printf("______________________________________________\n");
+		for (int y = 0; y < SmallMapTemp[i].size(); y++)
+		{
+			for (int x = 0; x < SmallMapTemp[i][y].size(); x++)
+			{
+				switch (SmallMapTemp[i][y][x])
+				{
+				case Objects::Space:
+					printf(". ");
+					break;
+				case Objects::Wall:
+					printf("# ");
+					break;
+				case Objects::Empty:
+					printf("  ");
+					break;
+				}
+			}
+			printf("\n");
+		}
+	}
+}
+
 std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 {
 	std::vector<std::vector<Objects>> Temp;
@@ -55,7 +91,7 @@ std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 		InSideWallsRemover(Temp);
 		SoloWallsRemover(Temp);
 		FillAroundWall(Temp);
-		IslandRoadConnector(Temp);
+		//IslandRoadConnector(Temp);
 		//GenerateSmallMap(Vector(RandomRange(10, 50), RandomRange(10, 50)));
 	}
 	return Temp;
@@ -63,9 +99,11 @@ std::vector<std::vector<Objects>> MapGenerator::GenerateMiddleMap()
 
 std::vector<std::vector<Objects>> MapGenerator::MapDepthFilter(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects InFilterObject)
 {
+
 	std::vector<std::vector<Objects>> TempMap;
 	int XMax = InMap1[0].size() > InMap2[0].size() ? InMap1[0].size() : InMap2[0].size();
 	int YMax = InMap1.size() > InMap2.size() ? InMap1.size() : InMap2.size();
+	SmallMapTemp.push_back(std::vector<std::vector<Objects>>(InMap2));//섬하나 추가
 
 	for (int y = 0; y < YMax; y++)
 	{
@@ -82,11 +120,20 @@ std::vector<std::vector<Objects>> MapGenerator::MapDepthFilter(const std::vector
 		{
 			if (InMap1[y][x] != InFilterObject)
 			{
+
 				TempMap[y][x] = InMap1[y][x];
 			}
 		}
 	}
+	if (!IsAreaOvelap(InMap1, InMap2))//충돌안하면 길을 만들어야 합니다
+	{
+		printf("충돌 안합니다!! \n\n");
 
+		if (!RoadGenerator(TempMap, InMap1, InMap2))//이부분 false 반환하면 InMap2 추가하면 안됩니다
+		{
+			return TempMap;
+		}
+	}
 	for (int y = 0; y < InMap2.size(); y++)
 	{
 		for (int x = 0; x < InMap2[0].size(); x++)
@@ -177,7 +224,7 @@ std::vector<std::vector<Objects>> MapGenerator::MapLocationSet(std::vector<std::
 	return InMap;
 }
 
-bool MapGenerator::Direction4Object(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2, Objects CheckObject)
+bool MapGenerator::IsAreaOvelap(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2)
 {
 	int XMax = InMap1[0].size() < InMap2[0].size() ? InMap1[0].size() : InMap2[0].size();
 	int YMax = InMap1.size() < InMap2.size() ? InMap1.size() : InMap2.size();
@@ -186,28 +233,39 @@ bool MapGenerator::Direction4Object(const std::vector<std::vector<Objects>>& InM
 	{
 		for (int x = 0; x < XMax; x++)
 		{
-			if (InMap2[y][x] == CheckObject)//지금 체크할 오브젝트 구간에 왔다면
+			if (InMap1[y][x] != Objects::Empty && InMap2[y][x] != Objects::Empty)//이건 이제 부딪힌거죠 둘다 같은 위치에 빈공간이 없으니까
 			{
-				if (YMax > (y + 1) && InMap1[y + 1][x] == CheckObject)
-				{
-					return true;
-				}
-				if (0 <= (y - 1) && InMap1[y - 1][x] == CheckObject)
-				{
-					return true;
-				}
-				if (XMax > (x + 1) && InMap1[y][x + 1] == CheckObject)
-				{
-					return true;
-				}
-				if (0 <= (x - 1) && InMap1[y][x - 1] == CheckObject)
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
 	return false;
+	//for (int y = 0; y < YMax; y++)
+	//{
+	//	for (int x = 0; x < XMax; x++)
+	//	{
+	//		if (InMap2[y][x] == CheckObject)//지금 체크할 오브젝트 구간에 왔다면
+	//		{
+	//			if (YMax > (y + 1) && InMap1[y + 1][x] == CheckObject)
+	//			{
+	//				return true;
+	//			}
+	//			if (0 <= (y - 1) && InMap1[y - 1][x] == CheckObject)
+	//			{
+	//				return true;
+	//			}
+	//			if (XMax > (x + 1) && InMap1[y][x + 1] == CheckObject)
+	//			{
+	//				return true;
+	//			}
+	//			if (0 <= (x - 1) && InMap1[y][x - 1] == CheckObject)
+	//			{
+	//				return true;
+	//			}
+	//		}
+	//	}
+	//}
+	//return false;
 }
 
 void MapGenerator::InSideWallsRemover(std::vector<std::vector<Objects>>& InMap)
@@ -393,12 +451,138 @@ void MapGenerator::FillAroundWall(std::vector<std::vector<Objects>>& InMap)
 	}
 }
 
-
-void MapGenerator::IslandRoadConnector(std::vector<std::vector<Objects>>& InMap)//섬을 찾으면 일단 섬안을 돌아서 섬 내부를 다 갈 수 있는지 확인 합시다
+bool MapGenerator::RoadGenerator(std::vector<std::vector<Objects>>& MainMap, const std::vector<std::vector<Objects>>& InMap,const std::vector<std::vector<Objects>>& InMap2)
 {
-	std::vector<std::vector<Objects>> Temp = std::vector<std::vector<Objects>>(InMap);
+	std::vector<Vector> MinDisLocation = IslandMinVector(InMap, InMap2);
+	if (MinDisLocation[0] == Vector::Min() && MinDisLocation[1] == Vector::Min())
+	{
+		printf("어 못만듭니다");
+		return false;
+	}
+	printf("최단 경로에 있는 두 위치 [%d, %d] [%d, %d]", MinDisLocation[0].X, MinDisLocation[0].Y, MinDisLocation[1].X, MinDisLocation[1].Y);
 
+	if (MinDisLocation[0].X == MinDisLocation[1].X)//이건 세로로 가면 되겠죠
+	{
+		int YMax = 0;
+		int YMin = 0;
+		if (MinDisLocation[0].Y > MinDisLocation[1].Y)
+		{
+			YMax = MinDisLocation[0].Y;
+			YMin = MinDisLocation[1].Y;
+		}
+		else
+		{
+			YMax = MinDisLocation[1].Y;
+			YMin = MinDisLocation[0].Y;
+		}
+
+		for (int y = YMin; y <= YMax; y++)//길 만들기
+		{
+			MainMap[y][MinDisLocation[0].X] = Objects::Space;
+
+			if(MinDisLocation[0].X + 1 < MainMap[0].size())
+			MainMap[y][MinDisLocation[0].X + 1] = Objects::Wall;
+
+			if(MinDisLocation[0].X - 1 >= 0)
+			MainMap[y][MinDisLocation[0].X - 1] = Objects::Wall;
+		}
+	}
+	else if (MinDisLocation[0].Y == MinDisLocation[1].Y)//이건 가로로 가면 되겠죠
+	{
+		int XMax = 0;
+		int XMin = 0;
+		if (MinDisLocation[0].X > MinDisLocation[1].X)
+		{
+			XMax = MinDisLocation[0].X;
+			XMin = MinDisLocation[1].X;
+		}
+		else
+		{
+			XMax = MinDisLocation[1].X;
+			XMin = MinDisLocation[0].X;
+		}
+
+		for (int x = XMin; x <= XMax; x++)//길 만들기
+		{
+			MainMap[MinDisLocation[0].Y][x] = Objects::Space;
+
+			if (MinDisLocation[0].Y + 1 < MainMap[0].size())
+				MainMap[MinDisLocation[0].Y + 1][x] = Objects::Wall;
+
+			if (MinDisLocation[0].Y - 1 >= 0)
+				MainMap[MinDisLocation[0].Y - 1][x] = Objects::Wall;
+		}
+	}
+
+	return true;
 }
+
+std::vector<Vector> MapGenerator::IslandMinVector(const std::vector<std::vector<Objects>>& InMap1, const std::vector<std::vector<Objects>>& InMap2)
+{
+	int MinDistance = INT_MAX;
+	std::vector<Vector> Temp;
+	Temp.push_back(Vector::Zero());
+	Temp.push_back(Vector::Zero());
+	for (int y = 0; y < InMap1.size(); y++)
+	{
+		for (int x = 0; x < InMap1[0].size(); x++)
+		{
+			if (InMap1[y][x] == Objects::Wall)
+			{
+				for (int i = 0; i < InMap2.size(); i++)
+				{
+					for (int j = 0; j < InMap2[0].size(); j++)
+					{
+						if (InMap2[i][j] == Objects::Wall &&
+							(Vector(x, y) - Vector(j, i)).Magnitude() < MinDistance
+							)
+						{
+							if (y == i || x == j)//세로 방향이나 가로 방향으로 갈 수 있다면
+							{
+								MinDistance = (Vector(x, y) - Vector(j, i)).Magnitude();
+								Temp[0] = Vector(x, y);
+								Temp[1] = Vector(j, i);
+							}
+							else
+							{
+								Temp[0] = Vector::Min();
+								Temp[1] = Vector::Min();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return Temp;
+}
+
+
+//void MapGenerator::IslandRoadConnector(std::vector<std::vector<Objects>>& InMap, Vector InLocation)//섬을 찾으면 일단 섬안을 돌아서 섬 내부를 다 갈 수 있는지 확인 합시다/이거 실패하면 맵 만들때 계산해서 합시다
+//{
+//	std::vector<std::vector<Objects>> Temp = std::vector<std::vector<Objects>>(InMap);
+//
+//	if (Temp.size() <= InLocation.Y || 0 > InLocation.Y ||
+//		Temp[0].size() <= InLocation.X || 0 > InLocation.X
+//		)
+//	{
+//		printf("테스트!!!   ");
+//		return;
+//	}
+//	if (Temp[InLocation.Y][InLocation.X] == Objects::Space)
+//	{
+//		printf("%d  %d", (InLocation + Vector::Up()).Y, (InLocation + Vector::Up()).X);
+//		IslandRoadConnector(Temp, InLocation + Vector::Up());
+//		IslandRoadConnector(Temp, InLocation + Vector::Down());
+//		IslandRoadConnector(Temp, InLocation + Vector::Left());
+//		IslandRoadConnector(Temp, InLocation + Vector::Right());
+//	}
+//	if (Temp[InLocation.Y][InLocation.X] == Objects::Wall)
+//	{
+//		printf("테스트");
+//		return;
+//	}
+//}
 
 Vector MapGenerator::IsArounObject(const std::vector<std::vector<Objects>>& InMap, Vector InFindLocation, Objects InFindObject)
 {

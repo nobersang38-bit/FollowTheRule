@@ -29,3 +29,8 @@ int Tools::Clamp(int InValue, int InMin, int InMax)
 	}
 	return InValue;
 }
+
+int Tools::Abs(int InValue)
+{
+	return InValue < 0 ? -InValue : InValue;
+}

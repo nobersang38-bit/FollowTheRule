@@ -3,34 +3,19 @@
 
 #include <iostream>
 #include "MapGenerator.h"
+#include "RythmGame.h"
+#include "ItemsManager.h"
 
 int main()
 {
-	srand(time(0));
-	MapGenerator mapGenerator;
-	//std::vector<std::vector<Objects>> Map = mapGenerator.GenerateSmallMap(Vector(10,15));
+	ItemsManager asd;
+	asd.DebugItemsPrint();
+	/*srand(time(0));
+	MapGenerator mapGenerator;*/
 
-	//for (int i = 0; i < Map.size(); i++)
-	//{
-	//	for (int j = 0; j < Map[i].size(); j++)
-	//	{
-	//		switch (Map[i][j])
-	//		{
-	//			case Objects::Space:
-	//				printf(". ");
-	//				break;
-	//			case Objects::Wall:
-	//				printf("# ");
-	//				break;
-	//			case Objects::Empty:
-	//				printf("  ");
-	//				break;
-	//		}
-	//	}
-	//	printf("\n");
-	//}
+	//RythmGame Rythm;
+	//Rythm.Play("asd");
 
-	//printf("%d  %d", Map.size(), Map[0].size());
 }
 
 // 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴

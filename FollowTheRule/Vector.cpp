@@ -1,4 +1,5 @@
 #include "Vector.h"
+#include "Tools.h"
 Vector Vector::operator*(int Other)//이거는 더 멀리가고 싶을때 사용합시다
 {
 	return Vector(X * Other, Y * Other);
@@ -48,5 +49,5 @@ bool Vector::operator!=(const Vector& Other)
 
 int Vector::Magnitude()
 {
-	return X + Y;
+	return Tools::Abs(X) + Tools::Abs(Y);
 }

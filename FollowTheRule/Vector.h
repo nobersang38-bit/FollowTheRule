@@ -1,4 +1,6 @@
 #pragma once
+#include <climits>
+
 class Vector
 {
 public:
@@ -17,7 +19,15 @@ public:
 	static inline Vector Down() { return Vector(0, -1); }
 	static inline Vector Left() { return Vector(-1, 0); }
 	static inline Vector Right() { return Vector(1, 0); }
+
+	static inline Vector UpRight() { return Vector(1, 1); }
+	static inline Vector UpLeft() { return Vector(-1, 1); }
+	static inline Vector DownRight() { return Vector(1, -1); }
+	static inline Vector DownLeft() { return Vector(-1, -1); }
+
 	static inline Vector Zero() { return Vector(0, 0); }
+	static inline Vector Max() { return Vector(INT_MAX, INT_MAX); }
+	static inline Vector Min() { return Vector(INT_MIN, INT_MIN); }
 
 	Vector operator*(int Other);//이거는 더 멀리가고 싶을때 사용합시다
 

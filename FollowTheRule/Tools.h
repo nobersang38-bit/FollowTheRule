@@ -7,6 +7,8 @@ namespace Tools
 
 	int Clamp(int InValue, int InMin = 0, int InMax = INT_MAX);
 
+	int Abs(int InValue);
+
 	enum class Direction
 	{
 		None = 0,
