@@ -1,4 +1,5 @@
 #include "ItemsManager.h"
+#include <map>
 
 ItemsManager::ItemsManager()
 {
@@ -33,18 +34,18 @@ ItemsManager::ItemsManager()
 
 void ItemsManager::DebugItemsPrint()
 {
-	for (int i = 0; i < Items.size(); i++)
-	{
-		Item* pItem = dynamic_cast<Item*>(Items[i]);
-		Document* pDocument = dynamic_cast<Document*>(Items[i]);
-		//GlassBottle* pGlassBottle = dynamic_cast<GlassBottle*>(Items[i]);
-		//FadedFinger* pFadedFinger = dynamic_cast<FadedFinger*>(Items[i]);
+	//for (int i = 0; i < Items.size(); i++)
+	//{
+	//	Item* pItem = dynamic_cast<Item*>(Items.);
+	//	Document* pDocument = dynamic_cast<Document*>(Items[i]);
+	//	//GlassBottle* pGlassBottle = dynamic_cast<GlassBottle*>(Items[i]);
+	//	//FadedFinger* pFadedFinger = dynamic_cast<FadedFinger*>(Items[i]);
 
-		asdasdasd(pItem, i);
+	//	asdasdasd(pItem, i);
 		//asdasdasd(pDocument, i);
 		//asdasdasd(pGlassBottle, i);
 		//asdasdasd(pFadedFinger, i);
-	}
+	//}
 }
 //
 //std::vector<Item> MapUsingItems =

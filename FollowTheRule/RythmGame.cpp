@@ -1,6 +1,7 @@
 #include "RythmGame.h"
 #include <iostream>
 #include <conio.h>
+#include "Tools.h"
 
 using namespace std;
 
@@ -8,7 +9,9 @@ void RythmGame::Play(std::string InGameName)
 {
 	const int Seed = 0;
 
-	const int NoteLength = 1000;
+	int NoteLength = 100;
+	NoteLength = NoteLength / Tools::Clamp(PlayerTalismanCount / 3, 1, 9999);
+
 	const int NoteNum = 4;
 
 	const int DisplayHeight = 5;
@@ -21,45 +24,56 @@ void RythmGame::Play(std::string InGameName)
 		Bar[i] = new bool[NoteNum];
 	}
 
-	srand(Seed);
 	BarInitialize(Bar, NoteLength, NoteNum);
-
+	
 	while (1)
 	{
 		int a = time(0);
 		printf("\n\n\n\n\n\n\n\n\n\n\n\n\n");
-		printf("%d\n", a);
-		printf("\n점수: [%d]\n", Score);
+		//printf("%d\n", a);
+		printf("\n남은 해독키: [%d]\n", NoteLength - Score - 10);
+		printf("체력: ");
+		for (int i = 0; i < PlayerHealth; i++)
+		{
+			printf("ㅁ");
+		}
+		printf("\n");
 		bool WhileCheck = DisplayOut(Bar, NoteLength, NoteNum, DisplayHeight, CurrentY);
 		if (!WhileCheck)
 		{
-			printf("\n정지 틀렸습니다 다시할거면 1 아니면2\n");
-			int PlayerInput;
-			cin >> PlayerInput;
-			if (PlayerInput == 1)
-			{
-				srand(Seed);
-				BarInitialize(Bar, NoteLength, NoteNum);
-			}
-			else
-			{
-				break;
-			}
+			PlayerHealth--;
+			Score++;
+		}
+		if (PlayerHealth <= 0)
+		{
+			break;
 		}
 		Score++;
+		if ((NoteLength - Score - 10) <= 0)
+		{
+			break;
+		}
 	}
 	//printf("\n\n\n%d", Bar[999][0]);
 	//printf("\n\n\n%d", Bar[999][1]);
 	//printf("\n\n\n%d", Bar[999][2]);
 	//printf("\n\n\n%d", Bar[999][3]);
 
-	for (int i = 0; i < NoteLength; i++)
+	//for (int i = 0; i < NoteLength; i++)
+	//{
+	//	for (int j = 0; j < NoteNum; j++)
+	//	{
+	//		printf("%d   ", Bar[i][j]);
+	//	}
+	//	printf("\n");
+	//}
+	if (PlayerHealth >0)
 	{
-		for (int j = 0; j < NoteNum; j++)
-		{
-			printf("%d   ", Bar[i][j]);
-		}
-		printf("\n");
+		printf("\n탈출에 성공했습니다\n");
+	}
+	else
+	{
+		printf("\n탈출에 실패했습니다\n");
 	}
 }
 

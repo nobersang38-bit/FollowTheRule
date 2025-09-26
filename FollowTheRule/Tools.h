@@ -2,7 +2,7 @@
 #include <limits>
 #include <thread>
 
-//꼭 생성 합시다
+//필요한 도구들을 넣어놓은 클래스
 class Tools
 {
 public:
@@ -13,6 +13,7 @@ public:
 
 	static int Abs(int InValue);
 
+	//입력받은 키를 감지
 	static bool GetKey(char InKey);
 
 	static float DeletaTime();

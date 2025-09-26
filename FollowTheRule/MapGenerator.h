@@ -74,7 +74,7 @@ private:
 	Vector SmallMapsMinsize = Vector(5, 5);
 	Vector SmallMapsMaxsize = Vector(15, 15);
 	Vector SmallMapsMinLocation = Vector(10, 10);
-	Vector SmallMapsMaxLocation = Vector(100, 100);
+	Vector SmallMapsMaxLocation = Vector(80, 80);
 
 
 

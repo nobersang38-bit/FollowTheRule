@@ -20,15 +20,7 @@ int main()
 {
 	srand(time(0));
 	Tools Tool;
-	//ItemsManager asd;
-	//asd.DebugItemsPrint();
-	//int64_t Seed = time(0);
-	//srand(Seed);
-	//MapGenerator mapGenerator;
-	//std::cout<<"\n\nSeed["<< Seed <<"]\n\n";
-
 	GameManager GameManaerMain;
-
 
 	//RythmGame Rythm;
 	//Rythm.Play("asd");

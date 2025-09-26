@@ -3,6 +3,7 @@
 #include <climits>
 #include "Vector.h"
 
+
 enum class ItemChildren
 {
 	Item = 0,
@@ -30,6 +31,8 @@ public:
 	virtual bool UsingEffect();
 
 	Item() = default;
+	Item(std::string InName) : Name(InName) {}
+
 	Item(int InID, ItemChildren InCategory, std::string InName, std::string InDescription, Vector InLocation, int InUseCount, std::string InDevelDescription)
 		: ID(InID), Category(InCategory), Name(InName), Description(InDescription), Location(InLocation), UseCount(InUseCount), DevelDescription(InDevelDescription) { }
 protected:
